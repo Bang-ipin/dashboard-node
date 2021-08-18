@@ -1,10 +1,10 @@
 import db from '../../models/index.js'
-const Product   = db.products
+const Category   = db.category
 
-const ProductsController  = {
+const CategoryController  = {
 
     findAll : async (req,res) => {
-        await Product.find()
+        await Category.find()
         .then((result) =>{
             res.send(result)
         }).catch((err) => {
@@ -15,15 +15,9 @@ const ProductsController  = {
     },
 
     create : async (req, res) => {
-        const post = new Product({
+        const post = new Category({
             id: req.body.id,
-            productid: req.body.productid,
-            name: req.body.name,
-            image: req.body.image,
-            description: req.body.description,
-            brand: req.body.brand,
-            category: req.body.category,
-            price: req.body.price,
+            category_name: req.body.category_name,
             published: req.body.published ? req.body.published : false
         })
 
@@ -39,7 +33,7 @@ const ProductsController  = {
 
     findOne : async (req,res) => {
         const id    = req.params.id
-        await Product.findById(id)
+        await Category.findById(id)
         .then((result) => {
             res.send(result)
         }).catch((err) =>{
@@ -52,15 +46,15 @@ const ProductsController  = {
     update : async (req,res) => {
         const id    = req.params.id
 
-        await Product.findByIdAndUpdate(id,req.body)
+        await Category.findByIdAndUpdate(id,req.body)
         .then((result) => {
             if(!result){
                 res.status(404).send({
-                    message : "Product Not found"
+                    message : "Category Not found"
                 })
             }
             res.send({
-                message : "Product was updated"
+                message : "Category was updated"
             })
         }).catch((err) =>{
             res.status(409).send({
@@ -72,7 +66,7 @@ const ProductsController  = {
     delete : async (req,res) => {
         const id    = req.params.id
 
-        await Product.findByIdAndRemove(id)
+        await Category.findByIdAndRemove(id)
         .then((result) => {
             if(!result){
                 res.status(404).send({
@@ -80,7 +74,7 @@ const ProductsController  = {
                 })
             }
             res.send({
-                message : "Product was Deleted"
+                message : "Category was Deleted"
             })
         }).catch((err) =>{
             res.status(409).send({
@@ -89,4 +83,4 @@ const ProductsController  = {
         });
     }
 }
-export default ProductsController
+export default CategoryController

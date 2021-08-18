@@ -1,10 +1,10 @@
 import db from '../../models/index.js'
-const Product   = db.products
+const User   = db.user
 
-const ProductsController  = {
+const UserController  = {
 
     findAll : async (req,res) => {
-        await Product.find()
+        await User.find()
         .then((result) =>{
             res.send(result)
         }).catch((err) => {
@@ -15,7 +15,7 @@ const ProductsController  = {
     },
 
     create : async (req, res) => {
-        const post = new Product({
+        const post = new User({
             id: req.body.id,
             productid: req.body.productid,
             name: req.body.name,
@@ -39,7 +39,7 @@ const ProductsController  = {
 
     findOne : async (req,res) => {
         const id    = req.params.id
-        await Product.findById(id)
+        await User.findById(id)
         .then((result) => {
             res.send(result)
         }).catch((err) =>{
@@ -52,15 +52,15 @@ const ProductsController  = {
     update : async (req,res) => {
         const id    = req.params.id
 
-        await Product.findByIdAndUpdate(id,req.body)
+        await User.findByIdAndUpdate(id,req.body)
         .then((result) => {
             if(!result){
                 res.status(404).send({
-                    message : "Product Not found"
+                    message : "User Not found"
                 })
             }
             res.send({
-                message : "Product was updated"
+                message : "User was updated"
             })
         }).catch((err) =>{
             res.status(409).send({
@@ -72,15 +72,15 @@ const ProductsController  = {
     delete : async (req,res) => {
         const id    = req.params.id
 
-        await Product.findByIdAndRemove(id)
+        await User.findByIdAndRemove(id)
         .then((result) => {
             if(!result){
                 res.status(404).send({
-                    message : "Data Not found"
+                    message : "User Not found"
                 })
             }
             res.send({
-                message : "Product was Deleted"
+                message : "User was Deleted"
             })
         }).catch((err) =>{
             res.status(409).send({
@@ -89,4 +89,4 @@ const ProductsController  = {
         });
     }
 }
-export default ProductsController
+export default UserController

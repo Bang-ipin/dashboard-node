@@ -1,0 +1,17 @@
+// AUTH
+
+GET http://localhost:5000/api/auth/user
+
+
+// PRODUCT
+
+GET http://localhost:5000/api/v1/products
+
+###
+POST http://localhost:5000/api/v1/products
+
+###
+PUT http://localhost:5000/api/v1/products/610a6d60ecbf7f36c890c8c8
+
+###
+DELETE http://localhost:5000/api/v1/products/611a664912c39913b08beb51
