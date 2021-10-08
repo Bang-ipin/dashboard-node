@@ -60,6 +60,7 @@ const ProductsController  = {
                 })
             }
             res.send({
+                success:true,
                 message : "Product was updated"
             })
         }).catch((err) =>{
@@ -80,6 +81,7 @@ const ProductsController  = {
                 })
             }
             res.send({
+                success:true,
                 message : "Product was Deleted"
             })
         }).catch((err) =>{

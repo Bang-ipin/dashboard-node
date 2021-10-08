@@ -15,7 +15,7 @@ const routes = (app) => {
   auth.post("/login", AuthController.Login);
   auth.post("/register", AuthController.Register);
   auth.post("/forgot-password", AuthController.Forgotpassword);
-  auth.post("/reset-password/:resetToken", AuthController.Resetpassword);
+  auth.put("/reset-password/:resetToken", AuthController.Resetpassword);
 
   /********** PRODUCT **************/
   productrouter.get("/", ProductsController.findAll);

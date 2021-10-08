@@ -1,5 +1,7 @@
 import db from '../../models/index.js'
 import ErrorResponse from '../../utils/errorResponse.js';
+import sendEmail from '../../utils/SendEmail.js'
+import crypto from "crypto";
 
 const User   = db.user
 
@@ -51,10 +53,65 @@ const AuthController  = {
     },
 
     Forgotpassword : async (req,res,next) => {
-        await res.send("Forgot Password route");
+        const {email} = req.body;
+        if (!email){
+            return next(new ErrorResponse("Please provide email"))
+        }
+        try {
+            const user = await User.findOne({email});
+            
+            if(!user){
+                return next(new ErrorResponse("Email could not be sent",404))
+            }
+            const resetToken    = user.getResetPasswordToken();
+            await user.save();
+
+            const resetUrl      = `http://localhost:5000/passwordreset/${resetToken}`;
+            const message       = `You have requested a password reset
+                                    <p>Plesae go to thi link to reset your password</p>
+                                    <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+                                    `
+            try {
+                await sendEmail({
+                    to:user.email,
+                    subject:"Password Reset Request",
+                    text:message
+                });
+                res.status(200).json({success:true,data:"Email Sent"})
+            } catch (error) {
+                user.resetpasswordToken     = undefined;
+                user.resetpasswordExpire    = undefined;
+                await user.save();
+                return next(new ErrorResponse("Email could not be send",500))
+            }
+        } catch (error) {
+            next(error)
+        }
     },
     Resetpassword : async (req,res,next) => {
-        await res.send("Reset Password route");
+        const resetpasswordToken     = crypto.createHash("sha256").update(req.params.resetToken).digest("hex");
+
+        try {
+            const user = await User.findOne({
+                resetpasswordToken,
+                resetpasswordExpire: { $gt: Date.now() }
+            })
+            if(!user){
+                return next(new ErrorResponse("Invalid reset token",400))
+            }
+            user.password               = req.body.password;
+            user.resetpasswordToken     = undefined;
+            user.resetpasswordExpire    = undefined;
+            await user.save();
+
+            res.status(201).json({
+                success:true,
+                data:"Password reset success"
+            });
+        } catch (error) {
+            next(error)
+        }
+
     }
    
 }
